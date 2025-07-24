@@ -1,0 +1,46 @@
+name: WhiteNoise
+services:
+  minio:
+    container_name: whitenoise_minio
+    image: quay.io/minio/minio
+    restart: unless-stopped
+    environment:
+      - MINIO_ROOT_USER=minio
+      - MINIO_ROOT_PASSWORD=123456789
+      - MINIO_VOLUMES=/mnt/data
+      - MINIO_OPTS=--console-address :9001
+    volumes:
+      - ./storage:/mnt/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server --console-address ":9001"
+  postgres:
+    container_name: whitenoise_postgres
+    image: postgres:17.3
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: WhiteNoises
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: whitenoise_pgadmin
+    image: dpage/pgadmin4:2025-06-27-2
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin@gmail.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-123}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5500:80"
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+volumes:
+  pgadmin:
+  postgres:
