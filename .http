@@ -1,0 +1,70 @@
+@host= http://localhost:3000/api/v1
+
+###
+# @name loginUser
+POST {{host}}/users/login
+Content-Type: application/json
+
+{
+    "email": "Greg_Mayer@yahoo.com",
+    "password": "123456789"
+}
+
+###
+# @name createTags
+@access_token = {{loginUser.response.body.access_token}}
+POST {{host}}/tags
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+    "name": "nhạc rất hay"
+}
+
+###
+
+# @name deleteTags
+DELETE {{host}}/tags/1965355d-4ada-46a9-bac9-f55b0f5bc32e
+Authorization: Bearer {{access_token}}
+###
+
+# @name updateTags
+PUT {{host}}/tags
+Content-Type: application/json
+
+{
+    "id": "4d366631-91cd-4d3a-9455-570613b811a7",
+    "name": "Siêu hay2"
+}
+
+###
+# @name tagForWhitenoise
+@tagCode = nhac-rat-haybdc22c35-d2a6-4a35-bd08-0b3c160c4a28
+@whitenoiseId = f2975e1a-4e54-4957-85f5-67e36bfd5b4a
+PUT {{host}}/whitenoises/tag/{{tagCode}}/whitenoise/{{whitenoiseId}}
+
+###
+
+# @name registerUser
+
+POST {{host}}/users/register
+Content-Type: application/json
+
+{
+    "email": "congduan2554@gmail.com",
+    "fullName": "Nguyen Cong Duan",
+    "dateOfBirth": "2004-05-25",
+    "password": "123456789"
+}
+
+###
+
+# @name getAllWhitenoises
+GET {{host}}/whitenoises
+
+###
+# @name getAllMessages
+@access_token = {{loginUser.response.body.access_token}}
+GET {{host}}/chats?limit=2&page=3
+Content-Type: application/json
+Authorization: Bearer {{access_token}}

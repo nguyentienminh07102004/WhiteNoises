@@ -16,8 +16,9 @@ export class MinIOService {
     const metaData = {
       "Content-Type": file.mimetype
     };
-    await this.minioService.client.putObject(minioBucket, file.originalname, file.buffer, metaData);
-    return { url: `http://${minioHost}:${minioPort}/${minioBucket}/${file.originalname}`, fileName: file.originalname };
+    const fileName = Date.now() + file.originalname;
+    await this.minioService.client.putObject(minioBucket, fileName, file.buffer, metaData);
+    return { url: `http://${minioHost}:${minioPort}/${minioBucket}/${fileName}`, fileName: file.originalname };
   };
 
   public delete = async (fileName: string) => {

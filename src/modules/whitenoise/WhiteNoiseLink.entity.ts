@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { WhiteNoiseEntity } from "./WhiteNoise";
+import { WhiteNoiseEntity } from "./WhiteNoise.entity";
 
 @Entity({ name: "whitenoiselinks" })
 export class WhiteNoiseLinkEntity {

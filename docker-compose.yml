@@ -26,9 +26,8 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     restart: unless-stopped
-
   pgadmin:
     container_name: whitenoise_pgadmin
     image: dpage/pgadmin4:2025-06-27-2
@@ -41,6 +40,50 @@ services:
       - "5500:80"
     volumes:
       - pgadmin:/var/lib/pgadmin
+  redis:
+    container_name: whitenoise_redis
+    image: redis:latest
+    restart: unless-stopped
+    command: >
+      --requirepass 123
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/var/lib/redis
+  redisinsight:
+    image: redis/redisinsight:latest
+    restart: unless-stopped
+    container_name: whitenoise_redisinsight
+    environment:
+      RI_REDIS_HOST: redis
+      RI_REDIS_PASSWORD: 123
+    ports:
+      - "5540:5540"
+  mongodb:
+    container_name: whitenoise_mongodb
+    image: mongodb/mongodb-community-server:5.0.2-ubuntu2004
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    volumes:
+      - mongo:/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongodb
+      MONGO_INITDB_ROOT_PASSWORD: 123
+  mongo-express:
+    container_name: whitenoise_mongo_express
+    image: mongo-express:1.0-20-alpine3.19
+    restart: unless-stopped
+    ports:
+      - "8082:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: mongodb
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 123
+      ME_CONFIG_MONGODB_SERVER: mongodb
+      ME_CONFIG_BASICAUTH_USERNAME: mongodb
+      ME_CONFIG_BASICAUTH_PASSWORD: 123
 volumes:
   pgadmin:
   postgres:
+  redis:
+  mongo:
